@@ -14,4 +14,6 @@ class User < ApplicationRecord
   #モデル作成時に、password_digestが必要
   #Gemfileには、bcrypt Gemも必要
   has_secure_password
+  
+  has_many :microposts
 end
