@@ -16,6 +16,8 @@ class User < ApplicationRecord
   has_secure_password
   
   has_many :microposts
+  has_many :favorites
+  has_many :like_posts, through: :favorites, source: :micropost
   #relationshipsとの関係
   has_many :relationships
   #上記relationshipsを通じて、follow_idを参照し、followingsをみる
@@ -37,12 +39,29 @@ class User < ApplicationRecord
     relationships.destroy if relationships
   end
   
-  #
   def following?(other_user)
     self.followings.include?(other_user)
   end
+  #フォロー処理の終了
   
-  def fiid_microposts
+  #お気に入り処理
+  def favorite(micropost)
+      unless self.id == micropost.user_id
+        self.favorites.find_or_create_by(micropost_id: micropost.id)
+      end
+  end
+  
+  def unfavorite(micropost)
+    micropost = self.favorites.find_by(micropost_id: micropost.id)
+    micropost.destroy if micropost
+  end
+  
+  def favorite?(micropost)
+    self.like_posts.include?(micropost)
+  end
+  #お気に入り処理終了
+  
+  def feed_microposts
     Micropost.where(user_id: self.following_ids + [self.id])
   end
 end
