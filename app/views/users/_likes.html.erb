@@ -10,11 +10,6 @@
           <p><%= like.content %></p>
         </div>
         <div>
-          <% if current_user == like.user %>
-            <%= link_to "Delete", like, method: :delete, data: { confirm: "You sure?" }, class: 'btn btn-danger btn-sm' %>
-          <% end %>
-        </div>
-        <div>
           <% unless current_user == like.user %>
             <%= render 'favorites/favorite_button', user: like.user ,micropost: like%>
           <% end %>
